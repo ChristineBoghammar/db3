@@ -117,4 +117,33 @@ public class Database {
 		
 		return performances;
 	}
+	
+
+	/**
+	 * 
+	 */
+	public void bookTicket(String performance){
+		
+	}
+	
+	/**
+	 * gets the list from the database with all the movies
+	 * @return ArrayList movies
+	 */
+	public ArrayList<String> getMovies(){
+		ArrayList<String> movies = new ArrayList<String>();
+		String sql = "SELECT * FROM movies";
+		try {
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				movies.add(rs.getString("name"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return movies;
+		
+	}
 }
