@@ -244,6 +244,12 @@ public class BookingPane extends BasicPane {
 			}
 			String movieName = nameList.getSelectedValue();
 			String date = dateList.getSelectedValue();
+			ArrayList <Map<String, String>> performances = db.getPerformances(movieName);
+		//	Map<.....> p = performances.get("date");
+		//	p.field[0] = movieName;
+			
+			
+			
 			/* --- insert own code here --- */
 		}
 	}
