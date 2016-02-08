@@ -69,7 +69,29 @@ public class Database {
 	public boolean isConnected() {
 		return conn != null;
 	}
-
+	public boolean isUser(String UID) throws SQLException{
+		//Creates the statement needed to see if the user exists
+		PreparedStatement prepStmt = null;
+		try{
+			String sql = "SELECT * FROM Users WHERE UserName =" + UID + ")";
+			prepStmt = conn.prepareStatement(sql);
+			//Checks if the result Set has 1 "next" or a first object, hence whether its empty or not
+			return prepStmt.getResultSet().next();
+		}catch(SQLException e){
+			System.out.println("Det gick inte att kolla om användaren existerar:" + " "); 
+			e.printStackTrace();
+			return false;
+		}
+		//If it is not possible to "log in" or find the user one should always close the statement
+		finally{
+			try{
+				prepStmt.close();
+			}catch(SQLException e){
+				e.printStackTrace();
+			}
+		}
+		
+	}
 	/* --- insert own code here --- */
 	//srkiv massor här
 	//hej
