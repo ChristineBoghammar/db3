@@ -1,6 +1,7 @@
 package dbtLab3;
 
 import java.sql.*;
+import java.util.*;
 
 /**
  * Database is a class that specifies the interface to the movie database. Uses
@@ -92,9 +93,28 @@ public class Database {
 		}
 		
 	}
-	/* --- insert own code here --- */
-	//srkiv massor här
-	//hej
-	//hej på dig med
-
+	/**
+	 * Gets the performances of the movie
+	 * 
+	 * @param string movieName
+	 * @return list of performances
+	 */
+	public ArrayList <Map<String, String>> getPerformances(String movieName){
+		ArrayList<Map<String, String>> performances = new ArrayList<Map<String, String>>();
+		PreparedStatement ps = null;
+		try {
+		String sql = "SELECT * FROM performances WHERE performances.movieName =  ?";
+		ps = conn.prepareStatement(sql);
+		ps.setString(1, movieName);
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			//performances.add(rs.getString("theaterName"), rs.getString("thedate"));	
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return performances;
+	}
 }
