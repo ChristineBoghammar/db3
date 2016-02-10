@@ -280,6 +280,8 @@ public class BookingPane extends BasicPane {
 			}
 			String movieName = nameList.getSelectedValue();
 			String date = dateList.getSelectedValue();
+			//String theater = 
+			
 			/* --- insert own code here --- */
 		}
 	}
