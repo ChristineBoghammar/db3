@@ -131,6 +131,21 @@ public class Database {
 	 * in order to show it in the GUI
 	 */
 	public int remainingSeats(String movieName, String date){
+		String sql = "SELECT freeSeats FROM Performances WHERE thedate = ? AND movieName = ?";
+		PreparedStatement ps = null;
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, date);
+			ps.setString(2, movieName);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				int remSeats = rs.getInt("freeSeats");
+				return remSeats;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return 0;
 	}
 	
