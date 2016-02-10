@@ -159,9 +159,20 @@ public class Database {
 				psSeats.setString(1, movieName);
 				psSeats.setString(2, date);
 				
+				psSeats.executeUpdate();
+				psReserve.executeUpdate();
 				
 			} catch (SQLException e) {
 				e.printStackTrace();
+			}
+			finally {
+				try {
+					if(psSeats != null) psSeats.close();
+					if(psReserve != null) psReserve.close();
+					conn.setAutoCommit(true);
+				} catch(SQLException e2) {
+					e2.printStackTrace();
+				}
 			}
 		}
 		return true;
