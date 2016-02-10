@@ -93,6 +93,7 @@ public class Database {
 		}
 		
 	}
+	
 	/**
 	 * Gets the performances of the movie
 	 * 
@@ -125,12 +126,21 @@ public class Database {
 		return p;
 	}
 	
-	
 	/**
-	 * 
+	 * A method that returns the number of remaining seats from a specific performance
+	 * in order to show it in the GUI
 	 */
-	public void bookTicket(String performance){
+	public int remainingSeats(){
+		return 0;
+	}
+	
 		
+	/**
+	 * Tries to make a reservation for the movieName and the date
+	 */
+	public boolean bookTicket(String movieName, String date){
+		
+		return true;
 	}
 	
 	/**
