@@ -125,15 +125,7 @@ public class Database {
 		return p;
 	}
 	
-	/**
-	 * En metod som hämtar alla bokningsbara filmer i databasen.
-	 * Visas när man trycker den högra panelknappen (högst upp)
-	 * Book Ticket
-	 */
-	public void getBookableMovies(){
-		
-	}
-
+	
 	/**
 	 * 
 	 */
