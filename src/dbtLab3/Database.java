@@ -149,7 +149,7 @@ public class Database {
 		String deductSeat = "UPDATE Performances " + "SET freeSeats = (freaSeats - 1) " + "WHERE movieName = ? and theDate = ?";
 		String makeReservation = "INSERT into Reservations(id, perdate, movieName, userName) values(id, date, movieName, UID);";
 		
-		if(isUser(UID) && (remainingSeats() > 0)){
+		if(isUser(UID) && (remainingSeats(movieName, date) > 0)){
 			try {
 				conn.setAutoCommit(false);
 				
