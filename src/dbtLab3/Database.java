@@ -130,7 +130,7 @@ public class Database {
 	 * A method that returns the number of remaining seats from a specific performance
 	 * in order to show it in the GUI
 	 */
-	public int remainingSeats(){
+	public int remainingSeats(String movieName, String date){
 		return 0;
 	}
 	
