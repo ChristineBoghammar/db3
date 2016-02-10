@@ -156,7 +156,6 @@ public class Database {
 	 * 
 	 */
 	public boolean bookTicket(String movieName, String date, String UID){
-		//Since we are going to make a DB query we start with declaring a prepared statement
 		PreparedStatement psSeats = null;
 		PreparedStatement psReserve = null;
 		
