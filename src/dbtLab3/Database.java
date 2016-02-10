@@ -99,8 +99,9 @@ public class Database {
 	 * @param string movieName
 	 * @return list of performances
 	 */
-	public ArrayList <Map<String, String>> getPerformances(String movieName){
-		ArrayList<Map<String, String>> performances = new ArrayList<Map<String, String>>();
+	public Map <String, ArrayList<String>> getPerformances(String movieName){
+		Map<String, ArrayList<String>> p = new HashMap <String, ArrayList<String>>();
+		//ArrayList<Map<String, String>> performances = new ArrayList<Map<String, String>>();
 		PreparedStatement ps = null;
 		try {
 		String sql = "SELECT * FROM performances WHERE performances.movieName =  ?";
@@ -108,6 +109,12 @@ public class Database {
 		ps.setString(1, movieName);
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
+			ArrayList<String> pset = new ArrayList<String>();
+			pset.add(rs.getString("theaterName"));
+		//	pset.add(rs.getInt("nrSeats"));
+			pset.add(rs.getString("thedate"));
+			p.put(movieName, pset);
+			
 			//performances.add(rs.getString("theaterName"), rs.getString("thedate"));	
 			}
 		} catch (SQLException e) {
@@ -115,7 +122,7 @@ public class Database {
 			e.printStackTrace();
 		}
 		
-		return performances;
+		return p;
 	}
 	
 	/**
