@@ -186,11 +186,11 @@ public class BookingPane extends BasicPane {
 	 */
 	private void fillDateList(String movieName) {
 		dateListModel.removeAllElements();
-		ArrayList <Map <String, String>> performances = db.getPerformances(movieName);
+		Map  <String, ArrayList<String>> performances = db.getPerformances(movieName);
 		
-		for(Map<String, String> p : performances){
-			dateListModel.addElement(p.get("date"));
-		}
+//		for(Map<String, String> p : performances){
+//			dateListModel.addElement(p.get("date"));
+//		}
 		
         /* --- insert own code here --- */
 	}
@@ -244,12 +244,16 @@ public class BookingPane extends BasicPane {
 			}
 			String movieName = nameList.getSelectedValue();
 			String date = dateList.getSelectedValue();
-			ArrayList <Map<String, String>> performances = db.getPerformances(movieName);
+			Map<String, String> p = new HashMap<String, String>();
+			
+			Map <String, ArrayList<String>> performances = db.getPerformances(movieName);
 		//	Map<.....> p = performances.get("date");
 		//	p.field[0] = movieName;
-			
-			
-			
+//			fields[0].setText(p.get("movieName"));
+//			fields[1].setText(p.get("date"));
+//			fields[2].setText(p.get("theaterName"));
+//			fields[3].setText(p.get("seatsLeft"));
+				
 			/* --- insert own code here --- */
 		}
 	}
