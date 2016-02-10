@@ -84,13 +84,13 @@ public class UserLoginPane extends BasicPane {
 		public void actionPerformed(ActionEvent e) {
 			String userId = fields[USER_ID].getText();
 			//If the user exists notify current user
-			try {
-				if(db.isUser(userId)){
-					
-				}
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
+//			try {
+//				if(db.isUser(userId)){
+//					
+//				}
+//			} catch (SQLException e1) {
+//				e1.printStackTrace();
+//			}
 			
 			/* --- insert own code here --- */
 		}

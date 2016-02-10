@@ -146,7 +146,7 @@ public class Database {
 		PreparedStatement psReserve = null;
 		
 		//SQL strings deduct 1 from value freeSeats and insert new reservation entry
-		String deductSeat = "UPDATE Performances " + "SET freeSeats = freaSeats - 1 " + "WHERE movieName = ? and theDate = ?";
+		String deductSeat = "UPDATE Performances " + "SET freeSeats = (freaSeats - 1) " + "WHERE movieName = ? and theDate = ?";
 		String makeReservation = "INSERT into Reservations(id, perdate, movieName, userName) values(id, date, movieName, UID);";
 		
 		if(isUser(UID) && (remainingSeats() > 0)){
@@ -155,7 +155,11 @@ public class Database {
 				
 				psSeats = conn.prepareStatement(deductSeat);	
 				psReserve = conn.prepareStatement(makeReservation);
-				//Always start a transaction by turning off auto commit mode in JDBC:
+				
+				psSeats.setString(1, movieName);
+				psSeats.setString(2, date);
+				
+				
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

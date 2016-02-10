@@ -282,7 +282,12 @@ public class BookingPane extends BasicPane {
 			}
 			String movieName = nameList.getSelectedValue();
 			String date = dateList.getSelectedValue();
-			/* --- insert own code here --- */
+			String userName = CurrentUser.instance().getCurrentUserId();
+			
+			if(db.bookTicket(movieName, date, userName)) {
+				System.out.println("Biljett-fan lyckades bokas");
+			} else {
+				System.out.println("Biljett-fan lyckades INTE bokas");			}
 		}
 	}
 }
