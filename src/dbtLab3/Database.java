@@ -118,6 +118,14 @@ public class Database {
 		return performances;
 	}
 	
+	/**
+	 * En metod som hömtar alla bokningsbara filmer i databasen.
+	 * Visas när man trycker den högra panelknappen (högst upp)
+	 * Book Ticket
+	 */
+	public void getBookableMovies(){
+		
+	}
 
 	/**
 	 * 
