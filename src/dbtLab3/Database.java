@@ -70,7 +70,7 @@ public class Database {
 	public boolean isConnected() {
 		return conn != null;
 	}
-	public boolean isUser(String UID) throws SQLException{
+	public boolean isUser(String UID){
 		//Creates the statement needed to see if the user exists
 		PreparedStatement prepStmt = null;
 		try{
@@ -140,22 +140,30 @@ public class Database {
 	 * Deducts 1 from value freeSeats in Performances and
 	 * 
 	 */
-	public boolean bookTicket(String movieName, String date){
+	public boolean bookTicket(String movieName, String date, String UID){
 		//Since we are going to make a DB query we start with declaring a prepared statement
-		PreparedStatement ps = null;
-		//SQL string that will deduct 1 from value freeSeats in the performance
-		String makeReservation = "INSERT into Reservation(id, perdate, movieName, userId) values(id, date, movieName, );";
-		try {
-			//Always start a transaction by turning off auto commit mode in JDBC:
-			conn.setAutoCommit(false);
-			ps = conn.prepareStatement(makeReservation);
-		} catch (SQLException e) {
-			e.printStackTrace();
+		PreparedStatement psSeats = null;
+		PreparedStatement psReserve = null;
+		
+		//SQL strings deduct 1 from value freeSeats and insert new reservation entry
+		String deductSeat = "UPDATE Performances " + "SET freeSeats = freaSeats - 1 " + "WHERE movieName = ? and theDate = ?";
+		String makeReservation = "INSERT into Reservations(id, perdate, movieName, userName) values(id, date, movieName, UID);";
+		
+		if(isUser(UID) && (remainingSeats() > 0)){
+			try {
+				conn.setAutoCommit(false);
+				
+				psSeats = conn.prepareStatement(deductSeat);	
+				psReserve = conn.prepareStatement(makeReservation);
+				//Always start a transaction by turning off auto commit mode in JDBC:
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-		
-		
 		return true;
 	}
+	
+	
 	
 	/**
 	 * gets the list from the database with all the movies
