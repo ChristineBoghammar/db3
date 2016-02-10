@@ -246,15 +246,14 @@ public class BookingPane extends BasicPane {
 			}
 			String movieName = nameList.getSelectedValue();
 			String date = dateList.getSelectedValue();
-			Map<String, ArrayList<String>> p = new HashMap<String, ArrayList<String>>();
 			
 			Map <String, ArrayList<String>> performances = db.getPerformances(movieName);
 			ArrayList <String> pInfo = performances.get(date);
 
 			fields[0].setText(movieName); //Movie name
-			fields[1].setText(pInfo.get(1)); // Date
+			fields[1].setText(pInfo.get(2)); // Date
 			fields[2].setText(pInfo.get(0)); // Theater name
-//			fields[3].setText(p.get("seatsLeft"));
+			fields[3].setText(pInfo.get(1)); // nr seats
 				
 			/* --- insert own code here --- */
 		}

@@ -111,9 +111,9 @@ public class Database {
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
 			ArrayList<String> pset = new ArrayList<String>();
-			pset.add(rs.getString("theaterName"));
-		//	pset.add(rs.getInt("nrSeats"));
-			pset.add(rs.getString("thedate"));
+			pset.add(0,rs.getString("theaterName"));
+			pset.add(1,rs.getString("nrSeats"));
+			pset.add(2,rs.getString("thedate"));
 			p.put(movieName, pset);
 			
 			//performances.add(rs.getString("theaterName"), rs.getString("thedate"));	
