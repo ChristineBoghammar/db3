@@ -136,9 +136,23 @@ public class Database {
 	
 		
 	/**
-	 * Tries to make a reservation for the movieName and the date
+	 * Tries to make a reservation for the movieName and the date:
+	 * Deducts 1 from value freeSeats in Performances and
+	 * 
 	 */
 	public boolean bookTicket(String movieName, String date){
+		//Since we are going to make a DB query we start with declaring a prepared statement
+		PreparedStatement ps = null;
+		//SQL string that will deduct 1 from value freeSeats in the performance
+		String makeReservation = "INSERT into Reservation(id, perdate, movieName, userId) values(id, date, movieName, );";
+		try {
+			//Always start a transaction by turning off auto commit mode in JDBC:
+			conn.setAutoCommit(false);
+			ps = conn.prepareStatement(makeReservation);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		
 		return true;
 	}
