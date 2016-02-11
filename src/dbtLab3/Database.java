@@ -74,8 +74,9 @@ public class Database {
 		//Creates the statement needed to see if the user exists
 		PreparedStatement prepStmt = null;
 		try{
-			String sql = "SELECT * FROM Users WHERE UserName =" + UID + ")";
+			String sql = "SELECT * FROM Users WHERE UserName = ? )";
 			prepStmt = conn.prepareStatement(sql);
+			prepStmt.setString(1, UID);
 			//Checks if the result Set has 1 "next" or a first object, hence whether its empty or not
 			return prepStmt.getResultSet().next();
 		}catch(SQLException e){
@@ -138,13 +139,21 @@ public class Database {
 			ps.setString(1, date);
 			ps.setString(2, movieName);
 			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
+			if (rs.next()) {
 				int remSeats = rs.getInt("freeSeats");
 				return remSeats;
-			}
+			}else
+				return -1;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally{
+			try {
+				ps.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
 		}
 		return 0;
 	}
@@ -181,7 +190,7 @@ public class Database {
 			}
 			finally {
 				try {
-					if(psSeats != null) psSeats.close();
+					if(psSeats != null) psSeats.close(); // returnerar psSeats null?
 					if(psReserve != null) psReserve.close();
 					conn.setAutoCommit(true);
 				} catch(SQLException e2) {
@@ -191,7 +200,6 @@ public class Database {
 		}
 		return true;
 	}
-	
 	
 	
 	/**
