@@ -80,7 +80,7 @@ public class Database {
 			//Checks if the result Set has 1 "next" or a first object, hence whether its empty or not
 			return prepStmt.getResultSet().next();
 		}catch(SQLException e){
-			System.out.println("Det gick inte att kolla om användaren existerar:" + " "); 
+			System.out.println("Det gick inte att kolla om användaren existerar:" + " "); //English?
 			e.printStackTrace();
 			return false;
 		}
