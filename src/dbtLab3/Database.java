@@ -74,11 +74,18 @@ public class Database {
 		//Creates the statement needed to see if the user exists
 		PreparedStatement prepStmt = null;
 		try{
-			String sql = "SELECT * FROM Users WHERE UserName = ? )";
+			String sql = "SELECT * FROM Users WHERE UserName = ? ";
 			prepStmt = conn.prepareStatement(sql);
 			prepStmt.setString(1, UID);
 			//Checks if the result Set has 1 "next" or a first object, hence whether its empty or not
-			return prepStmt.getResultSet().next();
+			ResultSet rs = prepStmt.executeQuery();
+			if(rs.next()){
+				String userN= rs.getString("userName");
+				CurrentUser.instance().loginAs(userN);
+				System.out.println(userN + "is logged in");
+				return true;
+			}else
+				return false;
 		}catch(SQLException e){
 			System.out.println("Det gick inte att kolla om användaren existerar:" + " "); //English?
 			e.printStackTrace();
@@ -113,15 +120,21 @@ public class Database {
 		while (rs.next()) {
 			ArrayList<String> pset = new ArrayList<String>();
 			pset.add(0,rs.getString("theaterName"));
-			pset.add(1,rs.getString("nrSeats"));
-			pset.add(2,rs.getString("thedate"));
-			p.put(movieName, pset);
+			pset.add(1,rs.getString("freeSeats"));
+			p.put(rs.getString("thedate"), pset);
 			
 			//performances.add(rs.getString("theaterName"), rs.getString("thedate"));	
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally{
+			try {
+				ps.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		return p;
@@ -142,8 +155,10 @@ public class Database {
 			if (rs.next()) {
 				int remSeats = rs.getInt("freeSeats");
 				return remSeats;
-			}else
-				return -1;
+			}else{
+			System.out.println("Couldn't find performance");
+			return -1;
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -162,15 +177,19 @@ public class Database {
 	/**
 	 * Tries to make a reservation for the movieName and the date:
 	 * Deducts 1 from value freeSeats in Performances and
-	 * 
+	 * false if
+	 * true if
 	 */
 	public boolean bookTicket(String movieName, String date, String UID){
 		PreparedStatement psSeats = null;
 		PreparedStatement psReserve = null;
 		
 		//SQL strings deduct 1 from value freeSeats and insert new reservation entry
-		String deductSeat = "UPDATE Performances " + "SET freeSeats = (freaSeats - 1) " + "WHERE movieName = ? and theDate = ?";
-		String makeReservation = "INSERT into Reservations(id, perdate, movieName, userName) values(id, date, movieName, UID);";
+		String deductSeat = "UPDATE Performances " + "SET freeSeats = (freeSeats - 1) " + "WHERE movieName = ? and theDate = ?";
+		String makeReservation = "INSERT into Reservations(perdate, movieName, userName) values(?, ?, ?)";
+		if(isReserved(movieName, date, UID)){
+			return false;
+		}
 		
 		if(isUser(UID) && (remainingSeats(movieName, date) > 0)){
 			try {
@@ -179,11 +198,17 @@ public class Database {
 				psSeats = conn.prepareStatement(deductSeat);	
 				psReserve = conn.prepareStatement(makeReservation);
 				
+				psReserve.setString(1, date);
+				psReserve.setString(2, movieName);
+				psReserve.setString(3, UID);
+				
 				psSeats.setString(1, movieName);
 				psSeats.setString(2, date);
 				
 				psSeats.executeUpdate();
 				psReserve.executeUpdate();
+				
+				
 				
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -201,7 +226,41 @@ public class Database {
 		return true;
 	}
 	
-	
+	/**
+	 * 
+	 * @param movieName
+	 * @param date
+	 * @param uID
+	 * @return true, if reservation already exists
+	 */
+	private boolean isReserved(String movieName, String date, String uID) {
+		String sql = "SELECT * FROM Reservations WHERE userName = ? AND movieName = ? AND perdate = ?";
+		
+		PreparedStatement ps =  null;
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, uID);
+			ps.setString(2, movieName);
+			ps.setString(3, date);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next())
+				return true;
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			try {
+				ps.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * gets the list from the database with all the movies
 	 * @return ArrayList movies
@@ -209,8 +268,9 @@ public class Database {
 	public ArrayList<String> getMovies(){
 		ArrayList<String> movies = new ArrayList<String>();
 		String sql = "SELECT * FROM movies";
+		PreparedStatement ps = null;
 		try {
-			PreparedStatement ps = conn.prepareStatement(sql);
+			ps = conn.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				movies.add(rs.getString("name"));
@@ -218,7 +278,49 @@ public class Database {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				ps.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return movies;	
+	}
+/**
+ * collects the reservation number
+ * @param movieName
+ * @param date
+ * @param userName
+ * @return resNr if reservation exists
+ */
+	public int getReservationNbr(String movieName, String date, String userName) {
+		String sql = "SELECT id FROM Reservations WHERE perdate =? and movieName = ? and userName = ?";
+				PreparedStatement ps = null;
+		try{
+			conn.setAutoCommit(false);
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, date);
+			ps.setString(2, movieName);
+			ps.setString(3, userName);
+			
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()){
+				return rs.getInt("id");
+			}
+		}catch(SQLException s){
+			s.printStackTrace();
+		}finally{
+			try {
+				ps.close();
+				conn.setAutoCommit(true);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		return -1;
 	}
 }

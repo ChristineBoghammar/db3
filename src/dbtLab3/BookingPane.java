@@ -177,7 +177,6 @@ public class BookingPane extends BasicPane {
 		for(String m : movies){
 		nameListModel.addElement(m);
 		}
-        /* --- insert own code here --- */
 	}
 
 	/**
@@ -187,14 +186,12 @@ public class BookingPane extends BasicPane {
 	private void fillDateList(String movieName) {
 		dateListModel.removeAllElements();
 		Map <String, ArrayList<String>> performances = db.getPerformances(movieName);
-		
-		
+		System.out.println("hämtat performances från databasen");
 		   Set<String> keys =  performances.keySet();  //get all keys
 		   for(String date: keys){
+			   System.out.println(date);
 			   dateListModel.addElement(date);
 		   }
-
-        /* --- insert own code here --- */
 	}
 
 	/**
@@ -223,8 +220,9 @@ public class BookingPane extends BasicPane {
 				return;
 			}
 			String movieName = nameList.getSelectedValue();
+			System.out.println("Vi har tryckt på movie" + movieName);
+			clearFields();
 			fillDateList(movieName);
-			/* --- insert own code here --- */
 		}
 	}
 
@@ -251,12 +249,10 @@ public class BookingPane extends BasicPane {
 			ArrayList <String> pInfo = performances.get(date);
 
 			fields[0].setText(movieName); //Movie name
-			fields[1].setText(pInfo.get(2)); // Date
+			fields[1].setText(date); // Date
 			fields[2].setText(pInfo.get(0)); // Theater name
 			fields[3].setText(pInfo.get(1)); // nr seats
-				
-			/* --- insert own code here --- */
-		}
+						}
 	}
 
 	/**
@@ -285,8 +281,19 @@ public class BookingPane extends BasicPane {
 			
 			if(db.bookTicket(movieName, date, userName)) {
 				System.out.println("Biljett-fan lyckades bokas");
+				int resNbr = db.getReservationNbr(movieName, date, userName);
+				if(resNbr != -1){
+					String resNbrString = Integer.toString(resNbr);
+					displayMessage("Booking number: " + resNbrString);					
+				}else{
+					displayMessage("Couldnt make reservation");					
+
+				}
+
 			} else {
-				System.out.println("Biljett-fan lyckades INTE bokas");			}
+				System.out.println("Biljett-fan lyckades INTE bokas");
+				displayMessage("The reservation already exists");
+			}
 		}
 	}
 }
